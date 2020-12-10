@@ -2,42 +2,64 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rocket : MonoBehaviour {
+public class Rocket : MonoBehaviour
+{
 
     Rigidbody rigidBody;
 
     AudioSource audioSource;
+
+    [SerializeField]float rcsThrust = 100f;
+
+    [SerializeField] float mainThrust = 1000f;
+
+
     // Start is called before the first frame update
-    void Start(){
+    void Start()
+    {
         rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
-    void Update(){
-        ProcessInput();
+    void Update()
+    {
+        Rotate();
+        Thrust();
     }
 
-    private void ProcessInput(){
+    private void Rotate()
+    {
+        rigidBody.freezeRotation = true; //Take manue control of rotation
+
+       
+        float rotationThisFrame = rcsThrust * Time.deltaTime;
+
+        if (Input.GetKey(KeyCode.A)){
+            
+            transform.Rotate(Vector3.forward * rotationThisFrame);
+        }else if(Input.GetKey(KeyCode.D)){
+            transform.Rotate(-Vector3.forward * rotationThisFrame);
+        }
+
+        rigidBody.freezeRotation = false; //Resume physics
+    }
+
+    private void Thrust()
+    {
+   
         if (Input.GetKey(KeyCode.Space))
         {
             //rigidBody.AddRelativeForce(Vector3.up);
-            rigidBody.AddRelativeForce(new Vector3(0,100000,0));
-            if(!audioSource.isPlaying){
+            rigidBody.AddRelativeForce(new Vector3(0, 1, 0) * mainThrust);
+            if (!audioSource.isPlaying)
+            {
                 audioSource.Play();
             }
-            
-        }else{
+
+        }else
+        {
             audioSource.Stop();
-        }
-
-        if(Input.GetKey(KeyCode.A)){
-            transform.Rotate(Vector3.forward);
-            
-        }
-
-        if(Input.GetKey(KeyCode.D)){
-            transform.Rotate(-Vector3.forward);
         }
     }
 }
