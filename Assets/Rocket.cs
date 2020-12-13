@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Rocket : MonoBehaviour
 {
@@ -52,7 +53,11 @@ public class Rocket : MonoBehaviour
             case "Friendly":
                 print("Friendly");
                 break;
+            case "Finish":
+                SceneManager.LoadScene(1);
+                break;
             default:
+                SceneManager.LoadScene(0);
                 print("Dead");
                 break;
         }
