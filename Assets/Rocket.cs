@@ -14,6 +14,14 @@ public class Rocket : MonoBehaviour
 
     [SerializeField] float mainThrust = 1000f;
 
+    enum State
+    {
+        Alive,
+        Dying,
+        Transcending
+    }
+
+    State state = State.Alive;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +37,15 @@ public class Rocket : MonoBehaviour
         Thrust();
     }
 
+    private void LoadNextScene()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    private void LoadFirstLevel()
+    {
+        SceneManager.LoadScene(0);
+    }
     private void Rotate()
     {
         rigidBody.freezeRotation = true; //Take manue control of rotation
@@ -54,10 +71,13 @@ public class Rocket : MonoBehaviour
                 print("Friendly");
                 break;
             case "Finish":
-                SceneManager.LoadScene(1);
+                state = State.Transcending;
+                Invoke("LoadNextScene", 1f);
+                
                 break;
             default:
-                SceneManager.LoadScene(0);
+                state = State.Transcending;
+                Invoke("LoadFirstLevel", 1f);
                 print("Dead");
                 break;
         }
