@@ -22,6 +22,7 @@ public class Rocket : MonoBehaviour
     [SerializeField] ParticleSystem sucessParticles;
     [SerializeField] ParticleSystem deathParticles;
 
+    bool collisionsDisabled = false;
     enum State
     {
         Alive,
@@ -45,8 +46,23 @@ public class Rocket : MonoBehaviour
         {
             Rotate();
             Thrust();
+            if (Debug.isDebugBuild)
+            {
+                RespondToDebugKeys();
+            }
         }
         
+    }
+
+    private void RespondToDebugKeys()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadNextScene();
+        }else if (Input.GetKeyDown(KeyCode.C))
+        {
+            collisionsDisabled = !collisionsDisabled;
+        }
     }
 
     private void LoadNextScene()
@@ -79,7 +95,7 @@ public class Rocket : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(state != State.Alive)
+        if(state != State.Alive || collisionsDisabled)
         {
             return;
         }
